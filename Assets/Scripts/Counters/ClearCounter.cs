@@ -33,6 +33,17 @@ public class ClearCounter : BaseCounter
                     {
                         GetKitchenObject().DestroySelf();
                     }
+                } else
+                {  //player tabak disinda bir sey tasiyor
+
+                    if(GetKitchenObject().TryGetPlate(out plateKitchenObject))
+                    { //tezgahta bir tabak var
+                        if (plateKitchenObject.TryAddIngredient(player.GetKitchenObject().GetKitchenObjectSO()))
+                        {
+                            player.GetKitchenObject().DestroySelf();
+                        }
+
+                    }
                 }
             } else
             {
