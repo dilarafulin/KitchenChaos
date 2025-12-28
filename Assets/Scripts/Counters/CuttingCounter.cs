@@ -6,6 +6,12 @@ public class CuttingCounter : BaseCounter, IHasProgress
 {
 
     public static event EventHandler OnAnyCut;
+
+    new public static void ResetStaticData()
+    {
+        OnAnyCut = null;
+    }
+
     public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChanged;
     /* IHasProgress.OnProgresChangedEventargs yaptik cunku IHasProgressteki ile ayni adlara sahip olmalarina ragmen farkli yerde olduklari icin farkli tipte eventler.
      * O yuzden IHasProgress'tekini kullandigimizdan emin olduk */
@@ -68,7 +74,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
 
     public override void InteractAlternate(Player player)
     {
-        if (HasKitchenObject() && HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO())) 
+        if (HasKitchenObject() && HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO()))
         {
             //Burada KitchenObject var ve kesilebiliyor
             cuttingProgress++;
@@ -104,10 +110,10 @@ public class CuttingCounter : BaseCounter, IHasProgress
 
 
 
-    private KitchenObjectSO GetOutputForInput (KitchenObjectSO inputKitchenObjectSO)
+    private KitchenObjectSO GetOutputForInput(KitchenObjectSO inputKitchenObjectSO)
     {
         CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(inputKitchenObjectSO);
-        if(cuttingRecipeSO != null)
+        if (cuttingRecipeSO != null)
         {
             return cuttingRecipeSO.output;
         }
@@ -117,7 +123,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
         }
     }
 
-    private CuttingRecipeSO GetCuttingRecipeSOWithInput (KitchenObjectSO inputKitchenObjectSO)
+    private CuttingRecipeSO GetCuttingRecipeSOWithInput(KitchenObjectSO inputKitchenObjectSO)
     {
         foreach (CuttingRecipeSO cuttingRecipeSO in cuttingRecipeSOArray)
         {
