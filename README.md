@@ -39,8 +39,9 @@ HOW TO RUN THE PROJECT
 
 - Clone the repository,
 - Open the project using Unity Hub (I used Unity 6000.0.36f1 version),
-- Open the MainmMenuScene, press Play to start the game
+- Open the MainMenuScene, press Play to start the game
 
 NOTES
 
 This project was developed for learning purposes by following a tutorial and enhancing it with personal improvements to better understand game development concepts.
+
