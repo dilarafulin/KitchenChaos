@@ -14,10 +14,28 @@ public class TutorialUI : MonoBehaviour
     private void Start()
     {
         GameInput.Instance.OnBindingRebind += GameInput_OnBindingRebind;
+        GameManager.Instance.OnStateChanged += GameManager_OnStateChanged;
 
         UpdateVisual();
 
-        Show();
+        // Eðer oyun WaitingToStart state'indeyse tutorial'ý göster
+        // Deðilse (direkt countdown'a geçildiyse) gösterme
+        if (GameManager.Instance.IsWaitingToStart())
+        {
+            Show();
+        }
+        else
+        {
+            Hide();
+        }
+    }
+
+    private void GameManager_OnStateChanged(object sender, System.EventArgs e)
+    {
+        if(GameManager.Instance.IsCountdownToStartActive())
+        {
+            Hide();
+        }
     }
 
     private void GameInput_OnBindingRebind(object sender, System.EventArgs e)

@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-
-    public static GameManager Instance {  get; private set; }
+    private const string TUTORIAL_SEEN_KEY = "TutorialSeen";
+    public static GameManager Instance { get; private set; }
 
     public event EventHandler OnStateChanged;
     public event EventHandler OnGamePaused;
@@ -19,22 +19,47 @@ public class GameManager : MonoBehaviour
     }
 
     private State state;
-    private float waitingToStartTimer = 1f;
     private float countdownToStartTimer = 3f;
     private float gamePlayingTimer;
-    private float gamePlayingTimerMax = 15f;
+    private float gamePlayingTimerMax = 60f;
     private bool IsGamePaused = false;
 
     private void Awake()
     {
         Instance = this;
 
+
         state = State.WaitingToStart;
+
     }
 
     private void Start()
     {
         GameInput.Instance.OnPauseAction += GameInput_OnPauseAction;
+        GameInput.Instance.OnInteractAction += GameInput_OnInteractAction;
+
+        // Tutorial daha önce görüldüyse direkt countdown'a geç
+        if (HasSeenTutorial())
+        {
+            countdownToStartTimer = 3f;
+            state = State.CountdownToStart;
+            OnStateChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    private void GameInput_OnInteractAction(object sender, EventArgs e)
+    {
+        if (state == State.WaitingToStart)
+        {
+            countdownToStartTimer = 3f;
+            state = State.CountdownToStart;
+            OnStateChanged?.Invoke(this, EventArgs.Empty);
+
+            // Tutorial görüldü olarak iþaretle
+            MarkTutorialAsSeen();
+
+
+        }
     }
 
     private void GameInput_OnPauseAction(object sender, EventArgs e)
@@ -47,14 +72,6 @@ public class GameManager : MonoBehaviour
         switch (state)
         {
             case State.WaitingToStart:
-                waitingToStartTimer -= Time.deltaTime;
-
-                if (waitingToStartTimer < 0f)
-                {
-                    state = State.CountdownToStart;
-
-                    OnStateChanged?.Invoke(this, EventArgs.Empty);
-                }
                 break;
 
             case State.CountdownToStart:
@@ -102,12 +119,12 @@ public class GameManager : MonoBehaviour
 
     public bool IsGameOver()
     {
-        return state == State.GameOver; 
+        return state == State.GameOver;
     }
 
     public float GetGamePlayingTimerNormalized()
     {
-        return 1 - (gamePlayingTimer / gamePlayingTimerMax); 
+        return 1 - (gamePlayingTimer / gamePlayingTimerMax);
     }
 
     public void TogglePauseGame()
@@ -118,11 +135,29 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 0f;
 
             OnGamePaused?.Invoke(this, EventArgs.Empty);
-        } else
+        }
+        else
         {
             Time.timeScale = 1f;
 
             OnGameUnpaused?.Invoke(this, EventArgs.Empty);
         }
     }
+
+    private bool HasSeenTutorial()
+    {
+        return PlayerPrefs.GetInt(TUTORIAL_SEEN_KEY, 0) == 1;
+    }
+
+    private void MarkTutorialAsSeen()
+    {
+        PlayerPrefs.SetInt(TUTORIAL_SEEN_KEY, 1); // sadece RAM'e yazar, crash olursa veri kaybi olur 
+        PlayerPrefs.Save(); // disk'e yazar , o yuzden gerekli
+    }
+
+    public bool IsWaitingToStart()
+    {
+        return state == State.WaitingToStart;
+    }
+
 }
