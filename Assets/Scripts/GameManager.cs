@@ -4,6 +4,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     private const string TUTORIAL_SEEN_KEY = "TutorialSeen";
+    private const string HIGH_SCORE_KEY = "HighScore";  
     public static GameManager Instance { get; private set; }
 
     public event EventHandler OnStateChanged;
@@ -92,6 +93,8 @@ public class GameManager : MonoBehaviour
                 {
                     state = State.GameOver;
 
+                    CheckAndSaveHighScore();
+
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
                 }
                 break;
@@ -159,5 +162,34 @@ public class GameManager : MonoBehaviour
     {
         return state == State.WaitingToStart;
     }
+
+    private void CheckAndSaveHighScore()
+    {
+        int currentScore = DeliveryManager.Instance.GetSuccesfulRecipesAmount();
+        int highScore = GetHighScore();
+
+        if (currentScore > highScore)
+        {
+            SaveHighScore(currentScore);
+        }
+    }
+
+    public int GetHighScore()
+    {
+        return PlayerPrefs.GetInt(HIGH_SCORE_KEY, 0);
+    }
+
+    private void SaveHighScore(int score)
+    {
+        PlayerPrefs.SetInt(HIGH_SCORE_KEY, score);
+        PlayerPrefs.Save();
+    }
+
+    // High score'u sýfýrlamak için (test amaçlý)
+    /*public void ResetHighScore()
+    {
+        PlayerPrefs.DeleteKey(HIGH_SCORE_KEY);
+        PlayerPrefs.Save();
+    }*/
 
 }
