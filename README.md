@@ -33,8 +33,6 @@ In this version, the tutorial screen is displayed only the first time the player
 After the player has seen it once, it will not appear again on subsequent game starts.
 - Play Again Button at Game Over UI
 - High Score System
-FUTURE IMPROVEMENTS
-* Highest score (high score) system
 
 HOW TO RUN THE PROJECT 
 
