@@ -31,7 +31,8 @@ CUSTOM FEATURES (NOT IN THE TURORIAL)
   - In the original tutorial, the tutorial screen is shown every time the game starts.
 In this version, the tutorial screen is displayed only the first time the player launches the game.
 After the player has seen it once, it will not appear again on subsequent game starts.
-
+- Play Again Button at Game Over UI
+- High Score System
 FUTURE IMPROVEMENTS
 * Highest score (high score) system
 
